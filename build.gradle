@@ -1,14 +1,111 @@
-group 'com.yang'
+//项目名
+group 'com.zxdc'
 version '1.0-SNAPSHOT'
+//构建路径
+buildDir = 'target'
 
+buildscript {
+    ext {
+        springBootVersion = '1.5.3.RELEASE'
+    }
+    repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+//java 插件
 apply plugin: 'java'
-
-sourceCompatibility = 1.7
-
-repositories {
-    mavenCentral()
+//idea 插件
+apply plugin: 'idea'
+idea.project {
+    jdkName = '1.7'
+    languageLevel = '1.7'
 }
 
+apply plugin: 'org.springframework.boot'
+//war插件
+//apply plugin: 'war'
+
+//jar包参数
+jar {
+    baseName = 'springboot_base'
+    version =  '1.0.0'
+}
+
+//编译版本号
+sourceCompatibility = 1.7
+
+//编码
+[compileJava, javadoc, compileTestJava]*.options*.encoding = 'UTF-8'
+
+//url指定的远程仓库
+repositories {
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+}
+
+//外部依赖
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    //compile 编译时的依赖
+    compile 'jstl:jstl:1.2'
+    compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    compile('org.springframework.boot:spring-boot-starter-web')
+    //testcompile 测试时编译依赖
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+
+//发布到本地文件
+task uploadArchives {
+    repositories {
+        flatDir {
+            dirs 'repos'
+        }
+    }
+}
+
+//发布到远程仓库
+uploadArchives {
+    repositories {
+        ivy {
+            credentials {
+                username "username"
+                password "pw"
+            }
+            url "http://repo.mycompany.com"
+        }
+    }
+}
+
+//任务
+task hello  {
+    doLast {
+        println 'Hello World!'
+    }
+}
+
+//大写变量
+task upper<<{
+    String someString = "MyName"
+    println "Original: "+someString
+    println "Upper case: "+someString.toUpperCase()
+}
+
+task count<<{
+    4.times {
+        print "$it"
+    }
+}
+
+//任务嵌套
+task intro(dependsOn:hello)<<{
+    println "I'm gradle"
+}
+
+4.times {
+    counter ->
+        task "task$counter"<<{
+            println "I'm task numver $counter"
+        }
 }
