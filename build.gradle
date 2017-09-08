@@ -27,6 +27,15 @@ idea.project {
 apply plugin: 'org.springframework.boot'
 //war插件
 //apply plugin: 'war'
+//运行app
+//apply plugin: 'org.akhikhl.gretty'
+//gardle jettyRun
+
+//gretty {
+//    port = 8080
+//    contextPath ="/${project.name}"
+//    servletContainer = 'jetty9'
+//}
 
 //jar包参数
 jar {
@@ -46,14 +55,21 @@ repositories {
 }
 
 //外部依赖
-dependencies {
-    //compile 编译时的依赖
-    compile 'jstl:jstl:1.2'
-    compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
-    compile('org.springframework.boot:spring-boot-starter-web')
-    //testcompile 测试时编译依赖
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-}
+apply from: "${rootProject.projectDir}/dependencies.gradle"
+//dependencies {
+//    //compile 编译时的依赖
+//    //testcompile 测试时编译依赖
+//    compile 'jstl:jstl:1.2'
+//    compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
+//    compile('org.springframework.boot:spring-boot-starter-web')
+//
+//    testCompile('org.springframework.boot:spring-boot-starter-test')
+//
+//    //多项目时项目之间的依赖
+////    compile project(':shared')
+//}
+
+
 
 
 //发布到本地文件
